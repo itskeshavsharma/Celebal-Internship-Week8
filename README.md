@@ -18,7 +18,7 @@ The system performs the complete analytics pipeline:
 # 🛠️ Technologies Used
 
 - Python 3.x
-- Pandas
+- Pandas (v2.1.0)
 - SQLite
 - SQL
 - Faker
@@ -70,13 +70,13 @@ ecommerce-analytics-system
 Clone the repository
 
 ```bash
-git clone <repository-link>
+git clone https://github.com/itskeshavsharma/Celebal-Internship-Week8.git
 ```
 
 Move into project directory
 
 ```bash
-cd ecommerce-analytics-system
+cd Celebal-Internship-Week8
 ```
 
 Install dependencies
