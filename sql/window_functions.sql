@@ -1,9 +1,3 @@
--- ============================================================
--- E-Commerce Analytics System
--- Window Functions SQL
--- ============================================================
-
-
 -- Query 1 : Rank Customers by Lifetime Revenue
 
 
