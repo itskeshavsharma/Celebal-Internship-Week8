@@ -1,0 +1,370 @@
+======================================================================
+SQL FILE : aggregations.sql
+======================================================================
+
+Query 1
+----------------------------------------------------------------------
+-- ============================================================
+-- E-COMMERCE ANALYTICS SYSTEM
+-- File : aggregations.sql
+-- ============================================================
+
+
+-- Query 1 : Total Revenue
+
+
+SELECT
+ROUND(SUM(quantity * unit_price * (1-discount_percent/100.0)),2) AS total_revenue
+FROM order_items
+
++-----------------+
+|   total_revenue |
++=================+
+|      1.1181e+08 |
++-----------------+
+
+
+Query 2
+----------------------------------------------------------------------
+-- Query 2 : Revenue Per Customer
+
+
+SELECT
+
+c.customer_id,
+c.customer_name,
+
+ROUND(
+SUM(
+oi.quantity * oi.unit_price * (1-oi.discount_percent/100.0)
+),2
+) AS revenue
+
+FROM customers c
+
+JOIN orders o
+ON c.customer_id=o.customer_id
+
+JOIN order_items oi
+ON o.order_id=oi.order_id
+
+GROUP BY
+c.customer_id,
+c.customer_name
+
+ORDER BY revenue DESC
+LIMIT 20
+
++---------------+-----------------+-------------+
+|   customer_id | customer_name   |     revenue |
++===============+=================+=============+
+|            40 | Anusha Bava     | 1.79515e+06 |
++---------------+-----------------+-------------+
+|           281 | Champak Lall    | 1.64834e+06 |
++---------------+-----------------+-------------+
+|           412 | Yashica Mani    | 1.44136e+06 |
++---------------+-----------------+-------------+
+|           378 | Hiral Saha      | 1.31656e+06 |
++---------------+-----------------+-------------+
+|           131 | Aarush Varma    | 1.23968e+06 |
++---------------+-----------------+-------------+
+|           262 | Lakshmi Tak     | 1.22031e+06 |
++---------------+-----------------+-------------+
+|           299 | Vedika Oza      | 1.18116e+06 |
++---------------+-----------------+-------------+
+|            24 | Wazir Kohli     | 1.17863e+06 |
++---------------+-----------------+-------------+
+|            32 | Panini Chahal   | 1.16602e+06 |
++---------------+-----------------+-------------+
+|           406 | Upasna Mann     | 1.12113e+06 |
++---------------+-----------------+-------------+
+
+Showing first 10 of 20 rows.
+
+
+
+Query 3
+----------------------------------------------------------------------
+-- Query 3 : Revenue Per Category
+
+
+SELECT
+
+p.category,
+
+ROUND(
+SUM(
+oi.quantity*oi.unit_price*(1-oi.discount_percent/100.0)
+),2
+) AS revenue
+
+FROM products p
+
+JOIN order_items oi
+ON p.product_id=oi.product_id
+
+GROUP BY p.category
+
+ORDER BY revenue DESC
+LIMIT 20
+
++-------------+-------------+
+| category    |     revenue |
++=============+=============+
+| Home        | 3.27753e+07 |
++-------------+-------------+
+| Electronics | 3.06258e+07 |
++-------------+-------------+
+| Books       | 2.42613e+07 |
++-------------+-------------+
+| Clothing    | 2.41472e+07 |
++-------------+-------------+
+
+
+Query 4
+----------------------------------------------------------------------
+-- Query 4 : Monthly Revenue
+
+
+SELECT
+
+strftime('%Y-%m',order_date) AS month,
+
+ROUND(
+SUM(
+oi.quantity*oi.unit_price*(1-oi.discount_percent/100.0)
+),2
+) AS revenue
+
+FROM orders o
+
+JOIN order_items oi
+ON o.order_id=oi.order_id
+
+GROUP BY month
+
+ORDER BY month
+
++---------+-------------+
+| month   |     revenue |
++=========+=============+
+| 2023-01 | 3.44577e+06 |
++---------+-------------+
+| 2023-02 | 3.24815e+06 |
++---------+-------------+
+| 2023-03 | 3.0679e+06  |
++---------+-------------+
+| 2023-04 | 3.45878e+06 |
++---------+-------------+
+| 2023-05 | 2.47648e+06 |
++---------+-------------+
+| 2023-06 | 3.76755e+06 |
++---------+-------------+
+| 2023-07 | 3.73463e+06 |
++---------+-------------+
+| 2023-08 | 4.42807e+06 |
++---------+-------------+
+| 2023-09 | 1.25915e+06 |
++---------+-------------+
+| 2023-10 | 3.29878e+06 |
++---------+-------------+
+
+Showing first 10 of 30 rows.
+
+
+
+Query 5
+----------------------------------------------------------------------
+-- Query 5 : Top 10 Customers
+
+
+SELECT
+
+c.customer_id,
+c.customer_name,
+
+ROUND(
+SUM(
+oi.quantity*oi.unit_price*(1-oi.discount_percent/100.0)
+),2
+) AS revenue
+
+FROM customers c
+
+JOIN orders o
+ON c.customer_id=o.customer_id
+
+JOIN order_items oi
+ON o.order_id=oi.order_id
+
+GROUP BY
+c.customer_id,
+c.customer_name
+
+ORDER BY revenue DESC
+
+LIMIT 10
+
++---------------+-----------------+-------------+
+|   customer_id | customer_name   |     revenue |
++===============+=================+=============+
+|            40 | Anusha Bava     | 1.79515e+06 |
++---------------+-----------------+-------------+
+|           281 | Champak Lall    | 1.64834e+06 |
++---------------+-----------------+-------------+
+|           412 | Yashica Mani    | 1.44136e+06 |
++---------------+-----------------+-------------+
+|           378 | Hiral Saha      | 1.31656e+06 |
++---------------+-----------------+-------------+
+|           131 | Aarush Varma    | 1.23968e+06 |
++---------------+-----------------+-------------+
+|           262 | Lakshmi Tak     | 1.22031e+06 |
++---------------+-----------------+-------------+
+|           299 | Vedika Oza      | 1.18116e+06 |
++---------------+-----------------+-------------+
+|            24 | Wazir Kohli     | 1.17863e+06 |
++---------------+-----------------+-------------+
+|            32 | Panini Chahal   | 1.16602e+06 |
++---------------+-----------------+-------------+
+|           406 | Upasna Mann     | 1.12113e+06 |
++---------------+-----------------+-------------+
+
+
+Query 6
+----------------------------------------------------------------------
+-- Query 6 : Top Products By Quantity
+
+
+SELECT
+
+p.product_name,
+
+SUM(oi.quantity) AS total_quantity
+
+FROM products p
+
+JOIN order_items oi
+ON p.product_id=oi.product_id
+
+GROUP BY p.product_name
+
+ORDER BY total_quantity DESC
+
+LIMIT 10
+
++---------------------------+------------------+
+| product_name              |   total_quantity |
++===========================+==================+
+| Hp Keyboard Model 102     |               31 |
++---------------------------+------------------+
+| Levis Shirt Model 334     |               27 |
++---------------------------+------------------+
+| Ikea Chair Model 847      |               27 |
++---------------------------+------------------+
+| Ikea Chair Model 509      |               27 |
++---------------------------+------------------+
+| Philips Lamp Model 562    |               26 |
++---------------------------+------------------+
+| Apple Mobile Model 864    |               24 |
++---------------------------+------------------+
+| Ml Data Science Model 459 |               23 |
++---------------------------+------------------+
+| Hometown Sofa Model 401   |               23 |
++---------------------------+------------------+
+| Apple Tablet Model 961    |               22 |
++---------------------------+------------------+
+| Ikea Table Model 359      |               21 |
++---------------------------+------------------+
+
+
+Query 7
+----------------------------------------------------------------------
+-- Query 7 : Top Products By Revenue
+
+
+SELECT
+
+p.product_name,
+
+ROUND(
+SUM(
+oi.quantity*oi.unit_price*(1-oi.discount_percent/100.0)
+),2
+) AS revenue
+
+FROM products p
+
+JOIN order_items oi
+ON p.product_id=oi.product_id
+
+GROUP BY p.product_name
+
+ORDER BY revenue DESC
+
+LIMIT 10
+
++---------------------------+------------------+
+| product_name              |          revenue |
++===========================+==================+
+| Ikea Chair Model 847      |      1.16443e+06 |
++---------------------------+------------------+
+| Hp Keyboard Model 102     |      1.04487e+06 |
++---------------------------+------------------+
+| Levis Shirt Model 334     | 889879           |
++---------------------------+------------------+
+| Ikea Chair Model 509      | 874494           |
++---------------------------+------------------+
+| Philips Lamp Model 562    | 824385           |
++---------------------------+------------------+
+| Logitech Mouse Model 798  | 715410           |
++---------------------------+------------------+
+| Hometown Sofa Model 401   | 713191           |
++---------------------------+------------------+
+| Apple Tablet Model 517    | 698295           |
++---------------------------+------------------+
+| Apple Tablet Model 961    | 661161           |
++---------------------------+------------------+
+| Sql Programming Model 721 | 655558           |
++---------------------------+------------------+
+
+
+Query 8
+----------------------------------------------------------------------
+-- Query 8 : Average Order Value (AOV)
+
+
+SELECT
+
+ROUND(
+
+AVG(order_total)
+
+,2) AS average_order_value
+
+FROM
+
+(
+
+SELECT
+
+o.order_id,
+
+SUM(
+oi.quantity*oi.unit_price*(1-oi.discount_percent/100.0)
+) AS order_total
+
+FROM orders o
+
+JOIN order_items oi
+ON o.order_id=oi.order_id
+
+GROUP BY o.order_id
+
+)
+
++-----------------------+
+|   average_order_value |
++=======================+
+|                239935 |
++-----------------------+
+
