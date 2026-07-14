@@ -17,7 +17,7 @@ The system performs the complete analytics pipeline:
 
 # 🛠️ Technologies Used
 
-- Python 3.x
+- Python
 - Pandas (v2.1.0)
 - SQLite
 - SQL
